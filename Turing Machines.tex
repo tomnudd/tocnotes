@@ -1,20 +1,21 @@
 \documentclass{article}
+\usepackage{amsmath}
 \begin{document}
-\section{Formal definition of a Turing Machine}
-A Turing Machine is a 7-tuple ($Q$, $\Sigma$, $\Gamma$, $\delta$, $q_0$, $q_{accept}$, $q_{reject}$):
+\section{Formal definition of a Turing machine}
+A Turing machine is a 7-tuple ($Q$, $\Sigma$, $\Gamma$, $\delta$, $q_0$, $q_{accept}$, $q_{reject}$):
 \begin{itemize}
 	\item $Q$ is the set of states
 	\item $\Sigma$ is the input alphabet \textit{not} containing special blank symbol $\sqcup$
 	\item $\Gamma$ is the tape alphabet satisfying $\Sigma \subset \Gamma$ and $\sqcup \in \Gamma$
-	\item $\delta : Q \times \Gamma \rightarrow Q \times \Gamma \times {L, R}$ is the transition function
+	\item $\delta : Q \times \Gamma \rightarrow Q \times \Gamma \times \{L, R\}$ is the transition function
 	\item $q_0 \in Q$ is the start state
 	\item $q_{accept} \in Q$ is the accept state
 	\item $q_{reject} \in Q$ is the reject state, $q_{reject} \neq q_{accept}$
 \end{itemize}
 
-\section{Turing Machine computation}
+\section{Turing machine computation}
 \textbf{Tape content} is unbounded but always finite, and the first (leftmost) blank symbol marks the end of tape content.\medskip
-\\A configuration $C_1$ yields the configuration $C_2$ if the Turing Machine can legally go from $C_1$ to $C_2$ in a single step. A \textbf{configuration} consists of:
+\\A configuration $C_1$ yields the configuration $C_2$ if the Turing machine can legally go from $C_1$ to $C_2$ in a single step. A \textbf{configuration} consists of:
 \begin{itemize}
 	\item The current state
 	\item The tape content
@@ -24,7 +25,7 @@ The \textbf{start configuration} on an input $w \in \Sigma^*$ consists of start 
 \\A configuration is \textbf{accepting} if its state is $q_{accept}$. A configuration is \textbf{rejecting} if its state is $q_{reject}$.\medskip
 \\Accepting and rejecting configurations are \textbf{halting} configurations.\medskip
 %
-\\ A Turing Machine $M$ \textbf{accepts} an input $w$ if there is a sequence of configurations $C_1, C_2, ..., C_k$ such that:
+\\ A Turing machine $M$ \textbf{accepts} an input $w$ if there is a sequence of configurations $C_1, C_2, ..., C_k$ such that:
 \begin{enumerate}
 	\item $C_1$ is the start configuration of $M$ on input $w$
 	\item $C_i$ yields $C_{i+1}$ for $1 \leq i \leq k-1$
@@ -33,13 +34,76 @@ The \textbf{start configuration} on an input $w \in \Sigma^*$ consists of start 
 The \textbf{language} of $M$, denoted $L(M)$, is the set of strings accepted by M.
 
 \section{Turing-recognisable languages}
-A language $L$ is \textbf{Turing-recognisable} if there is a Turing Machine $M$ that recognises it, i.e. $L$ is the language of $M$.
+A language $L$ is \textbf{Turing-recognisable} if there is a Turing machine $M$ that recognises it, i.e. $L$ is the language of $M$.
 \\Turing-recognisable means the same thing as \textbf{semi-decidable} and \textbf{recursively enumerable}.\medskip
 \\ If $M$ recognises $L$, it may or may not halt on words not in $L$.
 
 \section{Turing-decidable languages}
-A language $L$ is \textbf{Turing-decidable} if there is a Turing Machine $M$ that accepts every $w \in L$ and rejects every $w \notin L$.
+A language $L$ is \textbf{Turing-decidable} if there is a Turing machine $M$ that accepts every $w \in L$ and rejects every $w \notin L$.
 \\ Turing-decidable means the same thing as \textbf{recursive}.\medskip
 \\If $M$ decides $L$, it always halts.
+
+\section{Multitape Turing machines}
+A \textbf{Multitape Turing machine} is like a single tape Turing machine with several tapes, each with its own head. The only difference in the formal definition is the transition function, which is now:
+$$\delta: Q \times \Gamma^k \rightarrow Q \times \Gamma^k \times \{L, R\}^k$$
+where k is the number of tapes.\medskip
+\\\textbf{Theorem.} Every multitape Turing machine has an equivalent single tape Turing machine.
+
+\section{Non-deterministic Turing machines}
+A \textbf{non-deterministic Turing machine} has a transition function:
+$$\delta: Q \times \Gamma \rightarrow \mathcal{P}(Q \times \Gamma \times \{L, R\})$$
+\\\textbf{Theorem.} Every non-deterministic Turing machine has an equivalent deterministic Turing machine.
+\\\textbf{Proof.} Consider the tree of all possible computations of the non-deterministic Turing machine. Start from the root (the start configuration) and do a breadth-first search. Accept only if an accepting configuration is found.
+\begin{itemize}
+	\item{DFS would not work}
+	\item{Can use a multitape Turing machine to implement the BFS}
+\end{itemize}
+
+\section{Church-Turing thesis}
+Intuitive notion of an algorithm is equivalent to the mathematical concept of an algorithm defined by Turing machines (or any other formal model of computation, such as $\lambda$-calculus, Post machines, recursive functions)
+
+\section{Universal Turing machine}
+Every Turing machine $M$ can be encoded as a word over a finite alphabet. Use $\langle M\rangle$ to denote the \textbf{encoding} of a Turing machine $M$.\medskip
+\\\textbf{Theorem.} There is a Turing machine $U$ that takes a two-part input -- the encoding of a Turing machine $M$ ($\langle M \rangle$) and a word $w$, and simulate $M$ on $w$. $U$ is called a \textbf{universal Turing machine}.
+
+\section{Halting problem}
+\textbf{Halting problem:} Given an encoding of a Turing machine $M$ and a word $w$, does $M$ terminate on $w$?\medskip
+\\\textbf{Proposition.} The Halting problem is Turing-recognisable.
+\\\textbf{Proof.} Run a universal Turing machine on the pair ($\langle M\rangle, w$). Accept if the computation eventually terminates.\medskip
+\\\textbf{Proposition.} The Halting problem is not Turing-decidable.
+\\\textbf{Proof.} Assume, for contradiction, there is a turing machine $H$ that decides the Halting problem.
+\begin{equation*}
+H(\langle M \rangle, w) =
+	\begin{cases}
+		\text{accept} & \text{if } M \text{ terminates on } w \\
+		\text{reject} & \text{if } M \text{ does not terminate on } w
+	\end{cases}
+\end{equation*}
+Use $H$ as a black box to create an instance of the Halting problem, on which, $H$ fails.
+\\Consider a Turing machine $D$ that takes the description of a single Turing machine $M$ as an input and does the following:
+\begin{equation*}
+D(\langle M\rangle) =
+	\begin{cases}
+		\text{accept} & \text{if } H(\langle M\rangle, \langle M\rangle) \text{ rejects}\\
+		\text{loop} & \text{if } H(\langle M\rangle, \langle M\rangle) \text{ accepts}
+	\end{cases}
+\end{equation*}
+What happens when D runs on its own encoding, $\langle D\rangle$?
+\begin{enumerate}
+	\item $D$ terminates on $\langle D\rangle$. By the construction of $D$, $H(\langle D\rangle, \langle D\rangle)$ rejects, giving a wrong answer
+	\item $D$ does not terminate on $\langle D\rangle$. By the construction of $D$, $H(\langle D\rangle, \langle D\rangle)$ accepts, giving a wrong answer.
+\end{enumerate}
+
+\section{Turing-recognisable vs. Turing-decidable}
+\textbf{Theorem.} A language $L$ is Turing-decidable if and only if both $L$ and its complement, $\bar{L}$, are Turing-recognisable.
+\\\textbf{Proof.} Suppose $M_1$ recognises $L$, and $M_2$ recognises $\bar{L}$.
+\\On an input $w$, run $M_1$ and $M_2$ in parallel -- i.e. simulate alternating steps of $M_1$ and $M_2$ on a multitape Turing machine.
+\\Either $M_1$ or $M_2$ must eventually accept -- accept if $M_1$ accepts and reject if $M_2$ accepts.
+
+\section{Co-Halting problem}
+Given an encoding of a Turing machine $M$, and word $w$, is it the case that $M$ doesn't terminate on $w$, i.e. is not Turing-recognisable.
+
+\section{Step-counter predicate}
+Step ($M, w, k$) if and only if the machine $M$ terminates on $w$ in no more than $k$ steps, is Turing-decidable.
 
 \end{document}
