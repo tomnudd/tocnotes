@@ -1,0 +1,46 @@
+\documentclass{article}
+\begin{document}
+\section{Formal definition of a Turing Machine}
+A Turing machine is a 7-tuple ($Q$, $\Sigma$, $\Gamma$, $\delta$, $q_0$, $q_{accept}$, $q_{reject}$):
+\begin{itemize}
+	\item $Q$ is the set of states
+	\item $\Sigma$ is the input alphabet \textit{not} containing special blank symbol $\sqcup$
+	\item $\Gamma$ is the tape alphabet satisfying $\Sigma \subset \Gamma$ and $\sqcup \in \Gamma$
+	\item $\delta : Q \times \Gamma \rightarrow Q \times \Gamma \times {L, R}$ is the transition function
+	\item $q_0 \in Q$ is the start state
+	\item $q_{accept} \in Q$ is the accept state
+	\item $q_{reject} \in Q$ is the reject state, $q_{reject} \neq q_{accept}$
+\end{itemize}
+
+\section{Turing Machine computation}
+\textbf{Tape content} is unbounded but always finite
+\begin{itemize}\item The first (leftmost) blank symbol marks the end of tape content\end{itemize}
+A configuration $C_1$ yields the configuration $C_2$ if the Turing Machine can legally go from $C_1$ to $C_2$ in a single step. A \textbf{configuration} consists of:
+\begin{itemize}
+	\item The current state
+	\item The tape content
+	\item The head location
+\end{itemize}
+The \textbf{start configuration} on an input $w \in \Sigma^*$ consists of start state $q_0$, $w$ as the tape content, and the head location is the first (leftmost) position of the tape.\medskip
+\\A configuration is \textbf{accepting} if its state is $q_{accept}$. A configuration is \textbf{rejecting} if its state is $q_{reject}$.\medskip
+\\Accepting and rejecting configurations are \textbf{halting} configurations.\medskip
+%
+\\ A Turing Machine $M$ \textbf{accepts} an input $w$ if there is a sequence of configurations $C_1, C_2, ..., C_k$ such that:
+\begin{enumerate}
+	\item $C_1$ is the start configuration of $M$ on input $w$
+	\item $C_i$ yields $C_{i+1}$ for $1 \leq i \leq k-1$
+	\item $C_k$ is an accepting configuration
+\end{enumerate}\medskip
+The \textbf{language} of $M$, denoted $L(M)$, is the set of strings accepted by M.
+
+\section{Turing-recognisable languages}
+A language $L$ is \textbf{Turing-recognisable} if there is a Turing Machine $M$ that recognises it, i.e. $L$ is the language of $M$.
+\\Turing-recognisable means the same thing as \textbf{semi-decidable} and \textbf{recursively enumerable}.\medskip
+\\ If $M$ recognises $L$, it may or may not halt on words not in $L$.
+
+\section{Turing-decidable languages}
+A language $L$ is \textbf{Turing-decidable} if there is a Turing Machine $M$ that accepts every $w \in L$ and rejects every $w \notin L$.
+\\ Turing-decidable means the same thing as \textbf{recursive}.\medskip
+\\If $M$ decides $L$, it always halts.
+
+\end{document}
