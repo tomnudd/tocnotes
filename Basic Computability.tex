@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\section{m-reduciblity}
+\textbf{Definition.} Let $A$ and $B$ be languages over alphabet $\Sigma$. $A$ is many-to-one reducible to $B$, written $A \leq B$, if there is a Turing machine $F$ that terminates on every input $u \in \Sigma^*$, and such that:
+$$ A = \{u \in \Sigma^* | F(u) \in B\}$$
+Informally, this means that checking $u \in A$ is no harder than checking $w \in B$.
+
+\subsection{Properties}
+\textbf{Proposition.} Suppose $A \leq B$.
+\begin{enumerate}
+	\item If $B$ is Turing-decidable, so is $A$
+	\item If $B$ is Turing-recognisable, so is $A$
+	\item If $A \leq B$ and $B \leq C$, then $A \leq C$
+\end{enumerate}
+Denote $A \equiv B$ to mean that $A \leq B$ and $B \leq A$. Informally, this means that $A$ and $B$ are equally difficult.
+
+\section{m-completeness}
+Language $A$ is \textbf{m-complete} if:
+\begin{enumerate}
+	\item $A$ is Turing-recognisable, and
+	\item for every Turing-recognisable language $B$, $B \leq A$.
+\end{enumerate}
+Informally, if $A$ is m-complete, then $A$ is as hard as any other Turing-recognisable language\medskip
+\\\textbf{Corollary.} If $A$ is m-comnplete and $A \leq B$, then $B$ is m-complete.\medskip
+\\\textbf{Definition.} The Halting language $H$ consists of the words
+\end{document}
