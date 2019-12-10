@@ -1,5 +1,7 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
 \begin{document}
 \section{Syntax of lambda calculus}
 Assume a countable set of variable names, denoted by $a, b, c, ..., x, y, z, a_0, a_1, ...$\medskip
@@ -25,5 +27,46 @@ Assume a countable set of variable names, denoted by $a, b, c, ..., x, y, z, a_0
 \end{enumerate}
 
 \section{Bound variables}
+\begin{enumerate}
+	\item $<name>$ is bound in $\lambda<name'>.<term>$ if $<name>=<name'>$ or $<name>$ is bound in $<term>$
+	\item $<name>$ is bound in $<term'><term''>$ if $<name>$ is bound in $<term'>$ or $<name>$ is bound in $<term''>$
+\end{enumerate}
+\textbf{Examples.} \textcolor{blue}{Free} and \textcolor{red}{bound} occurrences of variables:
+\\ $(\lambda \textcolor{red}{x}.\textcolor{red}{x}\textcolor{blue}{y})(\lambda\textcolor{red}{y}.\textcolor{red}{y})$
+
+\section{Reductions}
+Denote by $T[x := E]$ the term in which every free occurrence of $x$ is replaced by $E$.\medskip
+\\\textbf{\textcolor{blue}{$\alpha$-conversion}}: Bound variables can be renamed, $\lambda x.F \equiv \lambda t.F[x := t]$, provided that $t$ is not free in $F$ and is not bound by a $\lambda$ in $F$ whenever it replaces an $x$.\medskip
+\\\textbf{\textcolor{red}{$\beta$-reduction}}: Applying a function to the argument: $(\lambda x.F)A \equiv F[x:=A]$ provided that all free occurrences in $A$ remain free in $F [x:=A]$.\medskip
+\\\textbf{Definition.} A $\lambda$-term is in a normal form if no $\beta$-reduction can be applied to it.\medskip
+\\\textbf{Theorem.} If a $\lambda$-term has a normal form, then the normal form is unique (up to renaming of bound variables).\medskip
+\\\textbf{Computing the normal form}: Keep on replacing the leftmost bound variable by the actual argument until no further reduction is possible.
+\\ This does not terminate if and only if the initial term has no normal form.
+
+\section{Church numerals}
+The \textbf{Church numerals} $C_0, C_1, ...$ are defined as:
+\begin{align*}
+C_0\qquad\equiv&\qquad\lambda sz.z \\
+C_1\qquad\equiv&\qquad\lambda sz.s(z) \\
+C_2\qquad\equiv&\qquad\lambda sz.s(s(z)) \\
+...\qquad...&\qquad...
+\end{align*}
+The successor can be defined as:
+$$S\qquad\equiv\qquad\lambda uvw.v(uvw)$$
+\textbf{Exercise.} Verify that $SC_n = C_{n+1}$ for every $n \in \mathbb{N}$\medskip
+\\\textbf{Lemma.} For every two terms $F$ and $A$, $C_nFA = F^{(n)}A$\medskip
+\\\textbf{Corollary.} Doing addition in $\lambda$-calculus: $C_nSC_m = C_{n+m}$
+
+
+\section{Predecessor}
+Define $True$ and $False$ by:
+\begin{align*}
+T\qquad&\equiv\qquad\lambda xy.x\\
+F\qquad&\equiv\qquad\lambda xy.y\\
+\end{align*}
+Represent a pair $(a, b)$ by $\lambda z.zab$. Define:
+$$\Phi = \lambda pz.z(S(pT))(pT)$$\medskip
+\\ The \textbf{predecessor} is defined as:
+$$P\equiv \lambda n.n\Phi(\lambda z.zC_0C_0)F$$
 
 \end{document}
