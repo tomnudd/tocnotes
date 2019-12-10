@@ -50,6 +50,14 @@ If either $M_1$ and $M_2$ accept $w$, $M'$ accepts $w$ and the accepting Turing 
 \\ If both $M_1$ and $M_2$ reject and either does so by looping, $M'$ will loop.
 \\ The solution for Turing-decidable languages would not work here as Turing machines can loop. If $M_1$ is looping, the construction used for Turing-decidable languages will loop even if $M_2$ accepts $w$, and thus, $w$ is the union of $L_1$ and $L_2$.
 
+\subsection{Examples}
+\textbf{Example 1.} Show that $\bar{E} = \{\langle M\rangle|M\text{ is a TM and } L(M) \neq \emptyset\}$ (the complement of $E$) is Turing-recognisable.\medskip
+\\\textbf{Proof.} Run $M$ in parallel on all (countably infinitely many) possible inputs.
+\\ This can be done in stages $0, 1, ...$: at stage $k$, run $M$ on each of the first $k$ inputs for $k$ steps each.
+\\ If a simulation accepts, terminate and accept.\medskip
+\\\textbf{Example 2.} Show that $E = \{\langle M\rangle|M\text{ is a TM and } L(M) = \emptyset\}$ is not Turing-recognisable.\medskip
+\\ As $\bar{E}$ is Turing-recognisable, if $E$ itself were also Turing-recognisable, it would also be decidable. However, this is not the case (section 4.2 below), so this is a contradiction. 
+
 \section{Turing-decidable languages}
 A language $L$ is \textbf{Turing-decidable} if there is a Turing machine $M$ that accepts every $w \in L$ and rejects every $w \notin L$.
 \\ Turing-decidable means the same thing as \textbf{recursive}.\medskip
@@ -63,6 +71,14 @@ A language $L$ is \textbf{Turing-decidable} if there is a Turing machine $M$ tha
 	\item Run $M_2$ on $w$. If it accepts, accept. Otherwise, reject.
 \end{enumerate}
 $M'$ accepts $w$ if either $M_1$ or $M_2$ accepts it. If both reject, then $M'$ rejects.
+
+\subsection{Examples}
+\textbf{Example 1.} Let $E = \{\langle M\rangle|M\text{ is a TM and } L(M) = \emptyset\}$ be the language of all descriptions of Turing machines recognising the empty language. $E$ is undecidable.\medskip
+\\\textbf{Proof.} Given an instance of the Halting problem $M$ and $w$, construct a Turing machine $S$ that takes a single number $k$ as input, simulates $M$ on $w$ for at most $k$ steps, and accepts only if the simulation has reached a terminal configuration.
+\\ Now, $L(S)$ is empty if and only if $M$ doesn't terminate on $w$.
+\\ Therefore, an algorithm that decides $E(S)$ would solve the halting problem, so $E$ is undecidable.\medskip
+\\\textbf{Example 2.} Let $EQ = \{\langle M_1, M_2\rangle | M_1\text{ and }M_2\text{ are TMs and }L(M_1) = L(M_2) \}$ be the language of all pairs of descriptions of Turing machines recognising the same language. $EQ$ is undecidable (by reduction from $E$).\medskip
+\\\textbf{Proof.} Take $E_0$ to be a trivial Turing machine that rejects anything. This means that $EQ(M, E_0)$ would solve $E(M)$ (example 1), a contradiction.
 
 \section{Multitape Turing machines}
 A \textbf{Multitape Turing machine} is like a single tape Turing machine with several tapes, each with its own head. The only difference in the formal definition is the transition function, which is now:
