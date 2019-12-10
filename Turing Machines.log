@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.24)  9 DEC 2019 12:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.24)  10 DEC 2019 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -106,16 +106,16 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
  [1
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- [4]
+ [4] [5]
 (./Turing Machines.aux) ) 
 Here is how much of TeX's memory you used:
- 842 strings out of 492649
- 9663 string characters out of 6129621
+ 844 strings out of 492649
+ 9692 string characters out of 6129621
  74275 words of memory out of 5000000
- 4786 multiletter control sequences out of 15000+600000
- 5353 words of font info for 20 fonts, out of 8000000 for 9000
+ 4788 multiletter control sequences out of 15000+600000
+ 5958 words of font info for 22 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 27i,9n,21p,274b,143s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 27i,9n,21p,277b,180s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2018/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/a
@@ -127,10 +127,10 @@ s/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmsy7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mti10.pfb>
-Output written on "Turing Machines.pdf" (4 pages, 116811 bytes).
+Output written on "Turing Machines.pdf" (5 pages, 119996 bytes).
 PDF statistics:
- 57 PDF objects out of 1000 (max. 8388607)
- 40 compressed objects within 1 object stream
+ 60 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

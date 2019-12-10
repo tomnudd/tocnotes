@@ -12,7 +12,8 @@ A Turing machine is a 7-tuple ($Q$, $\Sigma$, $\Gamma$, $\delta$, $q_0$, $q_{acc
 	\item $q_{accept} \in Q$ is the accept state
 	\item $q_{reject} \in Q$ is the reject state, $q_{reject} \neq q_{accept}$
 \end{itemize}
-
+The input alphabet $\Sigma$ never contains $\sqcup$, so $\Sigma \neq \Gamma$ is always true.
+\\ A Turing machine can never contain a single state, as any machine must have distinct states $q_{accept}$ and $q_{reject}$.
 \section{Turing machine computation}
 \textbf{Tape content} is unbounded but always finite, and the first (leftmost) blank symbol marks the end of tape content.\medskip
 \\A configuration $C_1$ yields the configuration $C_2$ if the Turing machine can legally go from $C_1$ to $C_2$ in a single step. A \textbf{configuration} consists of:
@@ -21,7 +22,8 @@ A Turing machine is a 7-tuple ($Q$, $\Sigma$, $\Gamma$, $\delta$, $q_0$, $q_{acc
 	\item The tape content
 	\item The head location
 \end{itemize}
-The \textbf{start configuration} on an input $w \in \Sigma^*$ consists of start state $q_0$, $w$ as the tape content, and the head location is the first (leftmost) position of the tape.\medskip
+The head can be in the same location in two successive steps if the machine attempts to move its head off the left-hand end -- we assume, by definition, that it just stays in the same cell rather than throwing an error.\medskip
+\\The \textbf{start configuration} on an input $w \in \Sigma^*$ consists of start state $q_0$, $w$ as the tape content, and the head location is the first (leftmost) position of the tape.\medskip
 \\A configuration is \textbf{accepting} if its state is $q_{accept}$. A configuration is \textbf{rejecting} if its state is $q_{reject}$.\medskip
 \\Accepting and rejecting configurations are \textbf{halting} configurations.\medskip
 %
@@ -38,10 +40,29 @@ A language $L$ is \textbf{Turing-recognisable} if there is a Turing machine $M$ 
 \\Turing-recognisable means the same thing as \textbf{semi-decidable} and \textbf{recursively enumerable}.\medskip
 \\ If $M$ recognises $L$, it may or may not halt on words not in $L$.
 
+\subsection{Closure under operations}
+\textbf{Example.} The collection of Turing-recognisable languages is closed under union.
+\\\textbf{Proof.} Let $L_1$ and $L_2$ be Turing-recognisable languages and $M_1$ and $M_2$ be Turing machines that recognise them. Construct a Turing machine $M'$ that recognises the union of $L_1$ and $L_2$. On input $w$:
+\begin{itemize}
+	\item Run $M_1$ and $M_2$ alternatively on $w$, step-by-step. If either accept, accept. If both halt and reject, reject.
+\end{itemize}
+If either $M_1$ and $M_2$ accept $w$, $M'$ accepts $w$ and the accepting Turing machine (either $M_1$ or $M_2$) arrives to its accepting state after a finite number of steps.\medskip
+\\ If both $M_1$ and $M_2$ reject and either does so by looping, $M'$ will loop.
+\\ The solution for Turing-decidable languages would not work here as Turing machines can loop. If $M_1$ is looping, the construction used for Turing-decidable languages will loop even if $M_2$ accepts $w$, and thus, $w$ is the union of $L_1$ and $L_2$.
+
 \section{Turing-decidable languages}
 A language $L$ is \textbf{Turing-decidable} if there is a Turing machine $M$ that accepts every $w \in L$ and rejects every $w \notin L$.
 \\ Turing-decidable means the same thing as \textbf{recursive}.\medskip
 \\If $M$ decides $L$, it always halts.
+
+\subsection{Closure under operations}
+\textbf{Example.} The collection of decidable languages is closed under union.
+\\\textbf{Proof.} For any two decidable languages $L_1$ and $L_2$, let $M_1$ and $M_2$ be the Turing machines that decide them. Construct a Turing machine $M'$ that decides the union of $L_1$ and $L_2$. On input $w$:
+\begin{enumerate}
+	\item Run $M_1$ on $w$. If it accepts, accept.
+	\item Run $M_2$ on $w$. If it accepts, accept. Otherwise, reject.
+\end{enumerate}
+$M'$ accepts $w$ if either $M_1$ or $M_2$ accepts it. If both reject, then $M'$ rejects.
 
 \section{Multitape Turing machines}
 A \textbf{Multitape Turing machine} is like a single tape Turing machine with several tapes, each with its own head. The only difference in the formal definition is the transition function, which is now:
