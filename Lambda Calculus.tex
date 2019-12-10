@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\section{Syntax of lambda calculus}
+Assume a countable set of variable names, denoted by $a, b, c, ..., x, y, z, a_0, a_1, ...$\medskip
+\\\textbf{Definition.} A \textbf{$\lambda$-term} is defined by the following context-free grammar:
+\begin{align*}
+<term>\qquad:&=\qquad <name>\\
+ & |\qquad(\lambda <name> . <term>)\\
+& |\qquad(<term><term>)
+\end{align*}
+\textbf{Conventions.}
+\begin{enumerate}
+	\item \textbf{Function application} is left-associative, so $(((A_1A_2)A_3)...A_k)$ can be abbreviated as $A_1A_2A_3...A_k$
+	\item Nested \textbf{abstractions} $(\lambda x_1.(\lambda x_2.(...\lambda x_k. A)...))$ can be abbreviated as $\lambda x_1x_2...x_k.A$
+\end{enumerate}
+\textbf{Example.}
+\\ $\lambda x y.F A B$ means $((\lambda x.(\lambda y.F)) A) B$
+
+\section{Free variables}
+\begin{enumerate}
+	\item $<name>$ is free in $<name>$
+	\item $<name>$ is free in $\lambda<name'>.<term>$ if $<name>\neq<name'>$ and $<name>$ is free in $<term>$
+	\item $<name>$ is free in $<term'><term''>$ if $<name>$ is free in $<term'>$ or $<name>$ is free in $<term''>$
+\end{enumerate}
+
+\section{Bound variables}
+
+\end{document}
