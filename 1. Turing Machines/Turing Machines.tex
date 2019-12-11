@@ -89,7 +89,7 @@ where k is the number of tapes.\medskip
 \section{Non-deterministic Turing machines}
 A \textbf{non-deterministic Turing machine} has a transition function:
 $$\delta: Q \times \Gamma \rightarrow \mathcal{P}(Q \times \Gamma \times \{L, R\})$$
-\\\textbf{Theorem.} Every non-deterministic Turing machine has an equivalent deterministic Turing machine.
+\textbf{Theorem.} Every non-deterministic Turing machine has an equivalent deterministic Turing machine.
 \\\textbf{Proof.} Consider the tree of all possible computations of the non-deterministic Turing machine. Start from the root (the start configuration) and do a breadth-first search. Accept only if an accepting configuration is found.
 \begin{itemize}
 	\item{DFS would not work}
