@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\begin{document}
+\section{Finite automata}
+A \textbf{finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+\begin{itemize}
+	\item $Q$ is a finite set of states
+	\item $\Sigma$ is the finite alphabet
+	\item $\delta: Q\times\Sigma \rightarrow Q$ is the transition function
+	\item $q_0 \in Q$ is the start state
+	\item $F \subseteq Q$ is the set of accept states (final states)
+\end{itemize}
+A finite automaton reads an input cell-by-cell, transitioning between states depending on the current input symbol and state.\medskip
+\\ If $A$ is the set of all strings accepted by a machine $M$, $A$ is the \textbf{language} of $M$, denoted $L(M) = A$. If $A$ is the language of $M$, $M$ \textbf{recognises} $A$.\medskip
+\\Can also say that $M$ accepts $A$, but this is confusing -- say "accept" when referring to machines accepting strings, and "recognise" when referring to machines accepting languages.\medskip
+\\ A machine only recognises one language, but can accept several strings. If a machine accepts no strings, it recognises the empty language $\emptyset$.\medskip
+\\\textbf{Question.} Is zero accept states allowable?
+\\\textbf{Answer.} Yes. Set $F$ to be the empty set $\emptyset$, yielding zero accept states.\medskip
+\\\textbf{Question.} Must there be exactly one transition exiting every state for each possible input symbol?
+\\\textbf{Answer.} Yes. The transition function, $\delta$, specifies one successor state for each possible combination of a state and an input symbol.\medskip
+\\Finite automata are good models for computers with extremely limited memory.
+
+\subsection{Computation}
+Let $M = (Q, \Sigma, \delta, q_0, F)$ be a finite automaton and $w = w_1w_2...w_n$ be a string, where each $w_i$ is a member of alphabet $\Sigma$. $M$ accepts $w$ is there exists a sequence of states $r_0, r_1, ..., r_n \in Q$ where:
+\begin{enumerate}
+	\item $r_0 = q_0$ (machine starts in the start state),
+	\item $\delta(r_i, w_{i+1}) = r_{i+1}$ for $i = 0, 1, ..., n-1$ (machine goes between states according to the transition function), and
+	\item $r_n \in F$ (machine accepts an input if it ends in an accept state).
+\end{enumerate}
+The machine $M$ recognises language $A$ if $A = \{w|M\text{ accepts } w\}$
+
+\section{Nondeterminism}
+In deterministic computation, when a machine is in a given state and reads the next input symbol, its next state is known (determined). In nondeterministic machines, there can be several choices for the next state.\medskip
+\\ Nondeterminism is just a generalisation of determinism. Every deterministic finite automaton (DFA) is automatically a nondeterministic finite automaton (NDFA).\medskip
+\\ Every state of a DFA has one exiting transition arrow for each symbol in the alphabet. In NDFAs, a state can have zero, one, or many exiting arrows for each symbol in the alphabet.\medskip
+\\ In DFAs, labels on transition arrows must be symbols from the alphabet. In NDFAs, labels on transition arrows may be symbols from the alphabet, or $\epsilon$. There can be zero, one, or many arrows exiting each state with label $\epsilon$.
+
+\subsection{How do nondeterministic machines compute?}
+Suppose a NDFA is running on an input string and gets to a state with multiple ways to proceed. After reading the input symbol, the machine splits into multiple copies of itself, and follows all possibilities in parallel. Each new machine takes one of the possibilities and continues.\medskip
+\\ If $\epsilon$-labelled exiting arrows are encountered, the machine splits into multiple copies -- one for each of the $\epsilon$-labelled arrows and one staying at the current state -- without reading an input.\medskip
+\\ In any of these machines, if the next input symbol does not appear on any arrows exiting the current state, the machine (and the branch of computation associated with it) dies.\medskip
+\\ If any one of these machines is in an accept state at the end of the input, the input string is accepted by the NDFA.\medskip
+\\\textbf{In short}, nondeterminism can be considered parallel computation wherein multiple independent "processes" or "threads" can be running concurrently.\medskip
+\\ Nondeterministic computation can be considered as a tree of possibilities, with the root being the start of the computation, and every branching point (fork) corresponds to a point where the machine has multiple choices. If one of the branches ends in an accept state, the machine accepts.
+
+\subsection{How are NDFAs useful?}
+\begin{itemize}
+	\item Every NFA can be converted into an equivalent DFA -- it is sometimes easier to construct NFAs than directly constructing DFAs
+	\item NFAs can be much smaller than their DFA counterparts
+	\item The functioning of some NFAs is easier to understand than that of their DFA counterparts
+	\item "Nondeterminism in finite automata is a good introduction to nondeterminism in more powerful computational models"
+\end{itemize}
+
+\section{Regular languages}
+A language is a \textbf{regular language} if it is recognised by some finite automaton.
+
+\subsection{Regular operations}
+Define three operations and language, called \textbf{regular operations}, to study properties of the regular languages.\medskip
+\\ Let $A$ and $B$ be languages.
+\begin{itemize}
+	\item \textbf{Union:} $A \cup B = \{x | x \in A\text{ or } x \in B\}$
+	\\ Takes all strings in both $A$ and $B$ and puts them in one language.
+	\item \textbf{Concatenation:} $A \circ B = \{xy | x \in A\text{ and } y \in B\}$
+	\\ Attaches a string from $A$ in front of a string from $B$, in all possible ways, to get the strings in the new language.
+	\item \textbf{Star:} $A^* = \{x_1x_2...x_k | k \geq 0\text{ and each } x_i \in A\}$
+	\\ A unary operation that attaches any number of strings in $A$ together to get a string in the new language.
+	\\ As "any number" includes zero, $\epsilon$ is always a member of $A^*$.
+\end{itemize}
+\end{document}
