@@ -113,4 +113,50 @@ Define three operations and language, called \textbf{regular operations}, to stu
 	\\ A unary operation that attaches any number of strings in $A$ together to get a string in the new language.
 	\\ As "any number" includes zero, $\epsilon$ is always a member of $A^*$.
 \end{itemize}
+
+\subsection{Closure under operations}
+\textbf{Theorem.} The class of regular languages is closed under union.\medskip
+\\\textbf{Proof.} Let $N_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)$ recognise $A_1$ and $N_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)$ recognise $A_2$. Construct $N = (Q, \Sigma, \delta, q_0, F)$ to recognise $A_1 \cup A_2$.
+\begin{enumerate}
+	\item $Q = \{q_0\} \cup Q_1 \cup Q_2$
+	\\ The states of $N$ are all the states of $N_1$ and $N_2$, with the addition of a new start state, $q_0$.
+	\item State $q_0$ is the start state of N
+	\item The set of accept states is $F = F_1 \cup F_2$
+	\\ N accepts if either $N_1$ or $N_2$ accepts, so the accept states of $N$ are all those of $N_1$ and $N_2$.
+	\item Define $\delta$ so that for any $q \in Q$ and any $a \in \Sigma_{\epsilon}$:
+	\begin{equation*}
+	\delta(q, a) = \begin{cases}
+		\delta_1(q, a) & q \in Q_1\\
+		\delta_2(q, a) & q \in Q_2\\
+		\{q_1, q_2\} & q = q_0 \text{ and } a = \epsilon\\
+		\emptyset & q = q_0 \text{ and } a \neq \epsilon
+	\end{cases}
+	\end{equation*}
+\end{enumerate}
+\textbf{Theorem.} The class of regular languages is closed under concatenation.\medskip
+\\\textbf{Proof.} Let $N_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)$ recognise $A_1$ and $N_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)$ recognise $A_2$. Construct $N = (Q, \Sigma, \delta, q_1, F_2)$ to recognise $A_1 \circ A_2$.
+\begin{enumerate}
+	\item $Q = Q_1 \cup Q_2$
+	\item The state $q_1$ is the same as the start state of $N_1$
+	\item Accept states $F_2$ are the same as the accept states of $N_2$.
+	\\ The accept states of $N_1$ have additional $\epsilon$ arrows that nondeterministically allow branching to $N_2$ whenever $N_1$ is in an accept state, signifying that $N_1$ has found an initial piece of the input that constitutes a string in $A_1$.
+	\\ $N$ accepts when the input can be split into two parts -- the first accepted by $N_1$ and the second by $N_2$.
+	\\ $N$ nondeterministically "guesses" where to make the split.
+	\item Define $\delta$ so that for any $q \in Q$ and any $a \in \Sigma_{\epsilon}$:
+	\begin{equation*}
+		\delta(q, a) = \begin{cases}
+		\delta_1(q, a) & q \in Q_1 \text{ and } q \notin F_1\\
+		\delta_1(q, a) & q \in F_1 \text{ and } a \neq \epsilon\\
+		\delta_1(q, a) \cup \{q_2\} & q \in F_1 \text{ and } a = \epsilon\\
+		\delta_2(q, a) & q \in Q_2 
+		\end{cases}
+	\end{equation*}
+\end{enumerate}
+\textbf{Theorem.} The class of regular languages is closed under star.\medskip
+\\ Given a regular language $A_1$, want to prove that $A_1^*$ is also regular. Take a NDFA $N_1$ recognising $A_1$ and modify it to recognise $A_1^*$. The resulting NDFA $N$ will accept its input whenever it can be broken into several pieces, with $N_1$ accepting each piece.\medskip
+\\ Construct $N$ like $N_1$ with additional $\epsilon$ arrows returning to the start state from the accept states.
+\\ When processing gets to the end of a piece that $N_1$ accepts, $N$ has the option of jumping back to the start state to try and read another piece that $N_1$ accepts.
+\\ $N$ must also accept $\epsilon$ as this is always a member of $A_1^*$.\medskip
+\\ Could add the start state to the set of accept states, but this may also add undesired strings to the recognised language, rather than just $\epsilon$. Instead, add a new start state (which is also an accept state), and has an $\epsilon$ arrow to the old start state. This adds $\epsilon$ to the language without adding anything else.\medskip
+\\\textbf{Proof.}
 \end{document}
