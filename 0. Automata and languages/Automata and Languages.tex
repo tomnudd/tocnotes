@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \begin{document}
 \section{Finite automata}
 A \textbf{finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
@@ -25,7 +26,7 @@ A finite automaton reads an input cell-by-cell, transitioning between states dep
 Let $M = (Q, \Sigma, \delta, q_0, F)$ be a finite automaton and $w = w_1w_2...w_n$ be a string, where each $w_i$ is a member of alphabet $\Sigma$. $M$ accepts $w$ is there exists a sequence of states $r_0, r_1, ..., r_n \in Q$ where:
 \begin{enumerate}
 	\item $r_0 = q_0$ (machine starts in the start state),
-	\item $\delta(r_i, w_{i+1}) = r_{i+1}$ for $i = 0, 1, ..., n-1$ (machine goes between states according to the transition function), and
+	\item $\delta(r_i, w_{i+1}) = r_{i+1}$ for $i = 0, ..., n-1$ (machine goes between states according to the transition function), and
 	\item $r_n \in F$ (machine accepts an input if it ends in an accept state).
 \end{enumerate}
 The machine $M$ recognises language $A$ if $A = \{w|M\text{ accepts } w\}$
@@ -39,21 +40,66 @@ In deterministic computation, when a machine is in a given state and reads the n
 \subsection{How do nondeterministic machines compute?}
 Suppose a NDFA is running on an input string and gets to a state with multiple ways to proceed. After reading the input symbol, the machine splits into multiple copies of itself, and follows all possibilities in parallel. Each new machine takes one of the possibilities and continues.\medskip
 \\ If $\epsilon$-labelled exiting arrows are encountered, the machine splits into multiple copies -- one for each of the $\epsilon$-labelled arrows and one staying at the current state -- without reading an input.\medskip
-\\ In any of these machines, if the next input symbol does not appear on any arrows exiting the current state, the machine (and the branch of computation associated with it) dies.\medskip
+\\ In any of the new machines, if the next input symbol does not appear on any arrows exiting the current state, the machine (and the branch of computation associated with it) dies.\medskip
 \\ If any one of these machines is in an accept state at the end of the input, the input string is accepted by the NDFA.\medskip
-\\\textbf{In short}, nondeterminism can be considered parallel computation wherein multiple independent "processes" or "threads" can be running concurrently.\medskip
-\\ Nondeterministic computation can be considered as a tree of possibilities, with the root being the start of the computation, and every branching point (fork) corresponds to a point where the machine has multiple choices. If one of the branches ends in an accept state, the machine accepts.
+\\\textbf{Summary.} Nondeterministic computation can viewed as a tree of possibilities, with the root being the start of the computation, and every branching point (fork) corresponds to a point where the machine has multiple choices.\medskip
+\\ If one of the branches ends in an accept state, the machine accepts.\medskip
+\\Nondeterminism can be considered parallel computation wherein multiple independent "processes" or "threads" can be running concurrently.
+
+\subsection{Nondeterministic finite automata}
+DFAs and NDFAs differ in the type of transition function:
+\begin{itemize}
+	\item In DFAs, the transition function takes a state and an input symbol, and produces the next state
+	\item In NDFAs, the transition function takes a state and an input symbol or the empty string, and produces the set of possible next states
+\end{itemize}
+A \textbf{nondeterministic finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where:
+\begin{itemize}
+	\item $Q$ is a finite set of states
+	\item $\Sigma$ is the finite alphabet
+	\item $\delta: Q\times\Sigma_{\epsilon} \rightarrow \mathcal{P}(Q)$ is the transition function
+	\item $q_0 \in Q$ is the start state
+	\item $F \subseteq Q$ is the set of accept states (final states)
+\end{itemize}
+$\mathcal{P}(Q)$ is the power set (set of all subsets) of a set $Q$. For any alphabet $\Sigma$, write $\Sigma_{\epsilon}$ to mean $\Sigma \cup \{\epsilon\}$.\medskip
+\\The \textbf{formal definition of computation} for a NDFA is also similar for that of a DFA. Let $N = (Q, \Sigma, \delta, q_0, F)$ be a NDFA and $w$ be a string over alphabet $\Sigma$. $N$ accepts $w$ if $w$ can be written as $w = y_1y_2...y_m$, where each $y_i$ is a member of $\Sigma_{\epsilon}$ and there exists a sequence of states $r_0, r_1, ..., r_m \in Q$ where:
+\begin{enumerate}
+	\item $r_0 = q_0$ (machine starts in the start state),
+	\item $r_{i+1} \in \delta(r_i, y_{i+1})$, for $i = 0, ..., m-1$ (state $r_{i+1}$ is one of the allowable next states when $N$ is in state $r_i$ and reading $y_{i+1}$), and
+	\item $r_m \in F$ (machine accepts an input if it ends in an accept state).
+\end{enumerate}
+Note that $\delta(r_i, y_{i+1})$ is the set of allowable next states, so say that $r_{i+1}$ is a member of this set.
 
 \subsection{How are NDFAs useful?}
 \begin{itemize}
-	\item Every NFA can be converted into an equivalent DFA -- it is sometimes easier to construct NFAs than directly constructing DFAs
-	\item NFAs can be much smaller than their DFA counterparts
-	\item The functioning of some NFAs is easier to understand than that of their DFA counterparts
+	\item Every NDFA can be converted into an equivalent DFA -- it is sometimes easier to construct NDFAs than directly constructing DFAs
+	\item NDFAs can be much smaller than their DFA counterparts
+	\item The functioning of some NDFAs is easier to understand than that of their DFA counterparts
 	\item "Nondeterminism in finite automata is a good introduction to nondeterminism in more powerful computational models"
 \end{itemize}
 
+\subsection{Equivalence}
+Two machines are \textbf{equivalent} if they recognise the same language.\medskip
+\\\textbf{Theorem.} Every nondeterministic finite automaton has an equivalent deterministic finite automaton.\medskip
+\\ If $k$ is the number of states of the NDFA, it has $2^k$ subsets of states. Each subset corresponds to one of the possibilities that the DFA must remember, so there will be $2^k$ states in the DFA simulating the NDFA.\medskip
+\\\textbf{Proof.} Let $N = (Q, \Sigma, \delta, q_0, F)$ be the NDFA recognising some language $A$. Construct DFA $M = (Q', \Sigma, \delta', q_0', F')$ recognising $A$.\medskip
+\\For any state $R$ of $M$, define $E(R)$ to be the collection of states that can be reached from members of $R$ only by going along $\epsilon$ arrows, including the members of $R$ themselves. For $R \subseteq Q$ let:
+$$E(R) = \{q | q \text{ can be reached from } R \text{ by travelling along 0 or more } \epsilon \text{ arrows}\}$$
+The construction of $M$ is as follows:
+\begin{itemize}
+	\item $Q' = \mathcal{P}(Q)$ -- every state of $M$ is a set of states in $N$.
+	\item For $R \in Q'$ and $a \in \Sigma$, let $\delta'(R, a) = \{q\in Q | q \in E(\delta(r, a)) \text{ for some } r \in R\}$ -- if $R$ is a state of $M$, it is also a set of states in $N$. When $M$ reads a symbol $a$ in state $R$, it shows where $a$ takes each state in $R$. As each state may go to a set of states, take the union of all these sets.
+	\item $q_0' = E(\{q_0\})$ -- M starts in the state corresponding to the set containing just the start state of $N$.
+	\item $F' = \{R \in Q' | R\text{ contains an accept state of } N\}$ -- $M$ accepts if one of the possible states that $N$ could be in at any point is an accept state.\hfill\qedsymbol
+\end{itemize}
+
 \section{Regular languages}
-A language is a \textbf{regular language} if it is recognised by some finite automaton.
+A language is a \textbf{regular language} if it is recognised by some finite automaton.\medskip
+\\\textbf{Theorem.} A language is regular if and only if some nondeterministic finite automaton recognises it.\medskip
+\\\textbf{Proof.}
+\begin{align*}
+(\rightarrow)\qquad&\qquad\parbox[t]{0.8\textwidth}{As any NDFA can be converted into an equivalent DFA, if an NDFA recognises some languages, so does some DFA, and the language is regular.} \\
+(\leftarrow)\qquad&\qquad\parbox[t]{0.8\textwidth}{A regular language has a DFA recognising it, and any DFA is also an NDFA.}
+\end{align*}
 
 \subsection{Regular operations}
 Define three operations and language, called \textbf{regular operations}, to study properties of the regular languages.\medskip
