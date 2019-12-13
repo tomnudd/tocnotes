@@ -158,5 +158,151 @@ Define three operations and language, called \textbf{regular operations}, to stu
 \\ When processing gets to the end of a piece that $N_1$ accepts, $N$ has the option of jumping back to the start state to try and read another piece that $N_1$ accepts.
 \\ $N$ must also accept $\epsilon$ as this is always a member of $A_1^*$.\medskip
 \\ Could add the start state to the set of accept states, but this may also add undesired strings to the recognised language, rather than just $\epsilon$. Instead, add a new start state (which is also an accept state), and has an $\epsilon$ arrow to the old start state. This adds $\epsilon$ to the language without adding anything else.\medskip
+\\\textbf{Proof.} Let $N_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)$ recognise $A_1$. Construct $N = (Q, \Sigma, \delta, q_0, F)$ to recognise $A_1^*$.
+\begin{enumerate}
+	\item $Q = Q_1 \cup \{q_0\}$
+	\\ The states of $N$ are those of $N_1$, plus the new start state
+	\item $q_0$ is the new start state
+	\item $F = F_1 \cup \{q_0\}$
+	\\ The accept states are the old accept states, plus the new start state
+	\item Define $\delta$ so that for any $q \in Q$ and any $A \in \Sigma_{\epsilon}$:
+	\begin{equation*}
+		\delta(q, a) = \begin{cases}
+			\delta_1(q, a) & q \in Q_1 \text{ and } q \notin F_1\\
+			\delta_1(q, a) & q \in F_1 \text{ and } a \neq \epsilon\\
+			\delta_1(q, a) \cup \{q_1\} & q \in F_1 \text{ and } a = \epsilon\\
+			\{q_1\} & q = q_0 \text{ and } a = \epsilon\\
+			\emptyset & q = q_0 \text{ and } a \neq \epsilon
+		\end{cases}
+	\end{equation*}
+\end{enumerate}
+
+\section{Regular expressions}
+Use regular operations to build up expressions describing languages, which are called \textbf{regular expressions}.\medskip
+\\ Say that $R$ is \textbf{regular expression} if $R$ is:
+\begin{enumerate}
+	\item $a$ for some $a$ in alphabet $\Sigma$,
+	\\ Regular expression $a$ represents language $\{a\}$
+	\item $\epsilon$,
+	\\ Regular expression $\epsilon$ represents language $\{\epsilon\}$
+	\item $\emptyset$,
+	\\ Represents the empty language
+	\item $(R_1 \cup R_2)$, where $R_1$ and $R_2$ are regular expressions,
+	\item $(R_1 \circ R_2)$, where $R_1$ and $R_2$ are regular expressions, or
+	\item $(R_1^*)$, where $R_1$ is a regular expression.
+\end{enumerate}
+Note that $\epsilon$ represents the language containing a single string--the empty string--whereas $\emptyset$ represents the language that does not contain any strings.\medskip
+\\ For convenience, let $R^+$ be shorthand for $RR^*$. $R^*$ has all strings that are 0 or more concatenations of strings from $R$. $R^+$ has all strings that are 1 or more concatenations of strings from $R$. $R^+ \cup \epsilon = R^*$.\medskip
+\\ Let $R^k$ be shorthand for the concatenation of $k$ $R$'s with each other.\medskip
+\\ As $R_1$ and $R_2$ are always smaller than $R$, a circular definition is avoided (defining the notion of a regular expression in terms of itself). Defining regular expressions in terms of smaller regular expressions avoids circularity -- this is an inductive definition.\medskip
+\\ To distinguish between a regular expression $R$ and the language it describes, use $L(R)$ to describe the language of $R$.\medskip
+\\ The order of operator precedence is star, concatenation, then union.
+
+\subsection{Examples}
+\textbf{Example 1.} $\Sigma$ describes the language consisting of all strings with length 1 over alphabet $\Sigma$.\medskip
+\\\textbf{Example 2.} $\Sigma^*$ describes the language consisting of all strings over $\Sigma$.\medskip
+\\\textbf{Example 3.} $\Sigma^*1$ is the language containing all strings that end in a 1.\medskip
+\\\textbf{Example 4.} $(0\Sigma^*) \cup (\Sigma^*1)$ consists of all strings that start with a 0 or end with a 1.\medskip
+\\\textbf{Example 5.} $(\Sigma\Sigma\Sigma)^* = \{w | \text{the length of } w \text{ is a multiple of 3}\}$\medskip
+\\\textbf{Example 6.} $1^*(01^+)^* = \{w |\text{every 0 in } w \text{ is followed by at least one 1}\}$\medskip
+\\\textbf{Example 7.} $1^*\emptyset = \emptyset$. Concatenating the empty set to any set yields the empty set.\medskip
+\\\textbf{Example 8.} $\emptyset^* = \{\epsilon\}$. The star operation puts together any number of strings from the language to get a string in the result. As the language is empty, the star operation can put together 0 strings, giving only the empty string.\medskip
+\\\textbf{Example 9.} $R \cup \emptyset = R$. Adding the empty language to any language will not change it.\medskip
+\\\textbf{Example 10.} $R \circ \epsilon = R$. Joining the empty string to any string will not change it.\medskip
+\\\textbf{Example 11.} $R \cup \epsilon$ may not equal $R$. For example, if $R = 0$, $L(R) = \{0\}$, but $L(R \cup \epsilon) = \{0, \epsilon\}$.\medskip
+\\\textbf{Example 12.} $R \circ \emptyset$ may not equal $R$. For example, if $R = 0$, $L(R) = \{0\}$, but $L(R \circ \emptyset) = \emptyset$.\medskip
+\\\textbf{Example 13.} $(0 \cup \epsilon)1^* = 01^* \cup 1^*$. Expression $0 \cup \epsilon$ describes language $\{0, \epsilon\}$, so the concatenation operation adds either $0$ or $\epsilon$ before every string in $1^*$.\medskip
+\\\textbf{Example 13.} $\Sigma^*001\Sigma^* = \{w | w \text{ contains the string } 001 \text{ as a substring}\}$.\medskip
+\\\textbf{Example 14.} $01 \cup 10 = \{01, 10\}$.\medskip
+\\\textbf{Example 15.} $(\Sigma\Sigma)^* = \{w|w \text{ is a string of even length}\}$. The length of a string is the number of symbols it contains.
+
+\subsection{Equivalence with finite automata}
+Regular expressions and finite automata have equivalent descriptive power. Any regular expression can be converted into a finite automaton that recognises the language it describes, and vice versa.\medskip
+\\ A regular language is a language recognised by some finite automaton.\medskip
+\\\textbf{Theorem.} A language is regular if and only if some regular expression describes it.\medskip
 \\\textbf{Proof.}
+\allowdisplaybreaks
+\begin{align*}
+(\rightarrow)\qquad&\parbox[t]{0.9\textwidth}{Suppose a regular expression $R$ describing some language $A$. Convert $R$ into an NDFA recognising $A$; if an NDFA recognises $A$, it is a regular language.
+	\\ There are six cases in the formal definition of regular expressions:
+	\begin{enumerate}
+	\item $R = a$ for some $a \in \Sigma$. $L(R) = \{a\}$.
+	\\ NDFA $N = (\{q_1, q_2\}, \Sigma, \delta, q_1, \{q_2\})$, where $\delta(q_1, a) = \{q_2\}$ and $\delta(r, b) = \emptyset$ for $r \neq q_1$ or $b \neq a$, recognises $L(R)$.
+	\item $R = \epsilon$. $L(R) = \{\epsilon\}$.
+	\\ NDFA $N = (\{q_1\}, \Sigma, \delta, q_1, \{q_1\})$ where $\delta(r, b) = \emptyset$ for any $r$ and $b$, recognises $L(R)$.
+	\item $R = \emptyset$. $L(R) = \emptyset$.
+	\\ NDFA $N = (\{q\}, \Sigma, \delta, q, \emptyset)$, where $\delta(r, b) = \emptyset$ for any $r$ and $b$, recognises $L(R)$.
+	\item $R = R_1 \cup R_2$.
+	\\ The class of regular languages is closed under union.
+	\\ Construct NDFA for $R$ from those for $R_1$ and $R_2$ and closure under union construction.
+	\item $R = R_1 \circ R_2$.
+	\\ The class of regular languages is closed under concatenation.
+	\\ Construct NDFA for $R$ from those for $R_1$ and $R_2$ and closure under concatenation construction.
+	\item $R = R_1^*$.
+	\\ The class of regular languages is closed under star.
+	\\ Construct NDFA for $R$ from $R_1$ and closure under star construction.
+	\end{enumerate}
+} \\
+(\leftarrow)\qquad&\parbox[t]{0.9\textwidth}{Idea: because $A$ is regular, it is accepted by a DFA. Describe a procedure for converting DFAs intk equivalent regular expressions.}
+\end{align*}
+
+\section{Generalised nondeterministic finite automata}
+\textbf{Generalised nondeterministic finite automata} (GNFAs) are nondeterministic finite automata where transition arrows may have any regular expressions as labels, instead of just members of the alphabet or $\epsilon$.\medskip
+\\ GNFAs read blocks of symbols from the input, not necessarily just one symbol at a time. A GNFA moves along a transition arrow connecting two states by reading a block of symbols from the input, which themselves constitute a string described by the regular expression on that arrow.\medskip
+\\ GNFAs are nondeterministic so may have several different ways to process the same input string.\medskip
+\\ A GNFA accepts its input if its processing can cause the GNFA to be in an accept state at the end of the input.\medskip
+\\Formally, a \textbf{generalised nondeterministic finite automaton} is a 5-tuple $(Q, \Sigma, \delta, q_{start}, q_{accept})$ where:
+\begin{enumerate}
+	\item $Q$ is the finite set of states
+	\item $\Sigma$ is the input alphabet
+	\item $\delta: (Q - \{q_{accept}\}) \times (Q - \{q_{start}\}) \rightarrow R$ is the transition function
+	\item $q_{start}$ is the start state
+	\item $q_{accept}$ is the accept state
+\end{enumerate}
+$R$ is the collection of all regular expressions over alphabet $\Sigma$. If $\delta(q_i, q_j) = R$, the arrow from state $q_i$ to state $q_j$ has regular expression $R$ as its label.\medskip
+\\ The domain of the transition function is $(Q - \{q_{accept}\}) \times (Q - \{q_{start}\})$ as an arrow connects every state to every other state, except that no arrows come from $q_{accept}$ or go to $q_{start}$.\medskip
+\\A GNFA \textbf{accepts} a string $w$ in $\Sigma^*$ if $w = w_1w_2...w_k$, where each $w_i$ is in $\Sigma^*$ and a sequence of states $q_0, q_1, ..., q_k$ exists such that:
+\begin{enumerate}
+	\item $q_0 = q_{start}$ is the start state
+	\item $q_k = q_{accept}$ is the accept state
+	\item for each $i$, $w_i \in L(R_i)$, where $R_i = \delta(q_{i-1}, q_i)$; $R_i$ is the expression on the arrow from $q_{i-1}$ to $q_i$
+\end{enumerate}
+
+\subsection{Special form}
+For convenience, require that GNFAs have a special form meeting the following conditions:
+\begin{itemize}
+	\item The start state has transition arrows going to every other state, but no arrows coming in from any other state
+	\item There is only a single accept state, which has arrows coming in from every other state, but no arrows going to any other state.
+	\item The accept state is not the same as the start state.
+	\item Except for the start and accept states, one arrow goes from every state to every other state, and also from each state to itself.
+\end{itemize}
+
+\subsection{Converting DFAs to GNFAs}
+A DFA can be converted to a GNFA in the special form:
+\begin{itemize}
+	\item Add a new start state with an $\epsilon$ arrow to the old start state
+	\item Add a new accept state with $\epsilon$ arrows from the old accept states
+	\item If any arrows have multiple labels, or if there are multiple arrows going between the same two states in the same direction, replace each with a single arrow whose label is the union of the previous labels
+	\item Add arrows labelled $\emptyset$ between states that had no arrows. This doesn't change the language recognised as a transition labelled with $\emptyset$ can never be used.
+\end{itemize}
+
+\subsection{Converting GNFAs to regular expressions}
+Suppose a GNFA with $k$ states. As a GNFA must have a start and an accept state, which must be different from each other, $k \geq 2$.
+\begin{itemize}
+	\item If $k > 2$, construct an equivalent GNFA with $k - 1$ states. This step can be repeated on the new GNFA until it is reduced to two states.
+	\item If $k = 2$, the GNFA has a single arrow going from the start state to the accept state -- the label of this arrow is the equivalent regular expression.
+\end{itemize}
+Cruicially, constructing an equivalent GNFA with one less state (when $k > 2$) is done by selecting a state, removing it from the machine, and repairing the remainder of the machine so that the same language is still recognised.\medskip
+\\ Call the removed state $q_{rip}$. After removing this state, alter the regular expressions that label the remaining arrows to repair the machine. These labels should compensate the absence of the state and add back the lost computations.\medskip
+\\ The new label, going from state $q_i$ to state $q_j$, is a regular expression that would take the machine from $q_i$ to $q_j$, either directly or through $q_{rip}$.\medskip
+\\\texttt{CONVERT(G):}
+\begin{enumerate}
+	\item Let $k$ be the number of states in $G$
+	\item If $k=2$, $G$ must consist of a start state, an accept state, and a single arrow connecting them and labelled with a regular expression $R$. Return the expression $R$.
+	\item If $k > 2$, select any state $q_{rip} \in Q$ different from $q_{start}$ and $q_{accept}$. Let $G'$ be the GNFA $(Q', \Sigma, \delta', q_{start}, q_{accept})$, where $Q' = Q - \{q_{rip}\}$ for any $q_i \in Q' - \{q_{accept}\}$.
+	\\ For any $q_j \in Q' - \{q_{start}\}$, let $\delta'(q_i, q_j) = (R_1)(R_2)^*(R_3)\cup(R_4)$, for $R_1 = \delta(q_i, q_{rip})$, $R_2 = \delta(q_{rip}, q_{rip})$, $R_3 = \delta(q_{rip}, q_j)$, and $R_4 = \delta(q_i, q_j)$.
+	\item Compute \texttt{CONVERT(G')} and return this value.
+\end{enumerate}
+Now, prove that \texttt{CONVERT} returns a correct value.\medskip
+\\\textbf{Claim.}
 \end{document}
