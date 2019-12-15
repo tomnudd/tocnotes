@@ -243,7 +243,8 @@ Regular expressions and finite automata have equivalent descriptive power. Any r
 	\\ Construct NDFA for $R$ from $R_1$ and closure under star construction.
 	\end{enumerate}
 } \\
-(\leftarrow)\qquad&\parbox[t]{0.9\textwidth}{Idea: because $A$ is regular, it is accepted by a DFA. Describe a procedure for converting DFAs intk equivalent regular expressions.}
+(\leftarrow)\qquad&\parbox[t]{0.9\textwidth}{Idea: because $A$ is regular, it is accepted by a DFA. Describe a procedure for converting DFAs intk equivalent regular expressions.\medskip
+\\ This part of the proof is given in the next section on generalised nondeterministic finite automata.}
 \end{align*}
 
 \section{Generalised nondeterministic finite automata}
@@ -304,5 +305,34 @@ Cruicially, constructing an equivalent GNFA with one less state (when $k > 2$) i
 	\item Compute \texttt{CONVERT(G')} and return this value.
 \end{enumerate}
 Now, prove that \texttt{CONVERT} returns a correct value.\medskip
-\\\textbf{Claim.}
+\\\textbf{Claim.} For any GNFA $G$, \texttt{CONVERT(G)} is equivalent to $G$.\medskip
+\\\textbf{Proof.} Prove this by induction on $k$, the number of states of the GNFA.\medskip
+\\\textit{\textbf{Basis:}} If $k=2$, $G$ can only have a single arrow, which goes from the start state to the accept state. The regular expression label on this arrow describes all strings that allow $G$ to get to the accept state -- thus, this expression is equivalent to $G$.\medskip
+\\\textit{\textbf{Induction step:}} Assume the claim is true for $k-1$ states -- use this assumption to prove the claim is true for $k$ states. First show that $G$ and $G'$ recognise the same language.\medskip
+\\Suppose $G$ accepts an input $w$. Then, in an accepting branch of the computation, $G$ enters a sequence of states $q_{start}, q_1, q_2, ..., q_{accept}$.
+\begin{itemize}
+	\item If none of them are the removed state $q_{rip}$, $G'$ also accepts $w$ as each of the new regular expressions labelling the arrows of $G'$ contains the old regular expression as part of a union.
+	\item If $q_{rip}$ appears, removing each run of consecutive $q_{rip}$ states forms an accepting computation for $G'$. The states $q_i$ and $q_j$ bracketing a run have a new regular expression on the arrow between them -- this describes all strings taking $q_i$ to $q_j$ via $q_{rip}$ on $G$. Thus, $G'$ accepts $w$.
+\end{itemize}
+Suppose $G'$ accepts an input $w$. As each arrow between any two states $q_i$ and $q_j$ in $G'$ describes the collection of strings taking $q_i$ to $q_j$ in $G$, either directly or through $q_{rip}$, $G$ must also accept $w$. Therefore, $G$ and $G'$ are equivalent.\medskip
+\\The induction hypothesis states that when the algorithm recursively calls itself on input $G'$, the result is a rgular expression equivalent to $G'$, as $G'$ has $k-1$ states. Thus, this regular expression is equivalent to $G$, and the algorithm is correct.
+
+\section{Nonregular languages}
+Finite automata are limited in power -- can prove that certain languages cannot be recognised by finite automata.\medskip
+\\ Consider language $B = \{0^n1^n | n \geq 0\}$. A DFA recognising $B$ would need to remember how many $0$s (not limited) have been seen so far as it reads the input; there are an unlimited number of possibilities to track. This can't be done with finitely many states.
+
+\subsection{Pumping lemma}
+The pumping lemma states that all regular languages have a special property. The property states that all strings in the language can be \textit{pumped} if they are at least as long as the \textit{pumping length}, a certain special value.\medskip
+\\That means that each such string contains a section that can be repeated any number of times, with the resulting string remaining in the language.\medskip
+\\If a language does not have this property, it is guaranteed not to be regular.\medskip
+\\\textbf{Pumping lemma.} If $A$ is a regular language, there is a number $p$ (the pumping length), where if $s$ is any string in $A$ of at least length $p$, then $s$ may be divided into three pieces $s = xyz$, satisfying:
+\begin{enumerate}
+	\item for each $i \geq 0$, $xy^iz \in A$,
+	\item $|y| > 0$, and
+	\item $|xy| \leq p$.
+\end{enumerate}
+Note that $|s|$ represents the length of string $s$, $y^i$ means that $i$ copies of $y$ are concatenated together, and $y^0 = \epsilon$.\medskip
+\\Either $x$ or $z$ may be $\epsilon$, but condition 2 says that $y \neq \epsilon$. Without this condition, the thorem would be trivially true.\medskip
+\\Condition 3 states that the pieces $x$ and $y$ togrther have length at most $p$. This is an extra technical condition that is occasionally useful when proving certain languages to be nonregular.
+
 \end{document}
