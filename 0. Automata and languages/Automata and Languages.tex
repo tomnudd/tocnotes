@@ -333,6 +333,27 @@ The pumping lemma states that all regular languages have a special property. The
 \end{enumerate}
 Note that $|s|$ represents the length of string $s$, $y^i$ means that $i$ copies of $y$ are concatenated together, and $y^0 = \epsilon$.\medskip
 \\Either $x$ or $z$ may be $\epsilon$, but condition 2 says that $y \neq \epsilon$. Without this condition, the thorem would be trivially true.\medskip
-\\Condition 3 states that the pieces $x$ and $y$ togrther have length at most $p$. This is an extra technical condition that is occasionally useful when proving certain languages to be nonregular.
+\\Condition 3 states that the pieces $x$ and $y$ togrther have length at most $p$. This is an extra technical condition that is occasionally useful when proving certain languages to be nonregular.\medskip
+\\\textbf{Proof idea.} Let $M$ be a DFA recognising $A$, and pumping length $p$ be the number of states in $M$. Show that any string $s$ in $A$ of length at least $p$ can be broken into three pieces $xyz$, satisfying the above conditions.
+\begin{itemize}
+	\item No strings of length at least $p$ -- theorem is vacuously true. The three conditions hold for all strings of length at least $p$ if there aren't any such strings.
+	\item If $s$ in $A$ has length at least $p$, consider the sequence of states that $M$ goes through when computing with $s$. Starts with $q_1$, the start state, until it reaches the end of $s$ in state $q_k$. With $s$ in $A$, $M$ accepts $s$, so $q_k$ is an accept state.
+	\\ Let $n$ be the length of $s$. Then, the sequence of states $q_1, ..., q_k$ has length $n+1$. As $n \geq p$, $n+1 > p$, the number of states in $M$.
+	\\ Thus, the sequnece must contain a repeated state, per the pigeonhole principle (if p pigeons are placed in fewer than p holes, some hole has to have more than one pigeon in it)
+\end{itemize}
+\textbf{Proof.} Let $M = (Q, \Sigma, \delta, q_1, F)$ be a DFA recognising $A$, and $p$ be the number of states of $M$. Let $s = s_1s_2...s_n$ be a string in $A$ of length $n$, where $n \geq p$.\medskip
+\\ Let $r_1, ..., r_{n+1}$ be the sequence of states that $M$ enters while processing $s$, so $r_{i+1} = \delta(r_i, s_i)$ for $1 \leq i \leq n$. This sequence has length $n+1$, which is at least $p+1$. Among the first $p+1$ elements in the sequence, two must be the same state by the pigeonhole principle. Let the first of these be $r_j$ adn the second $r_l$. As $r_l$ occurs among the first $p+1$ places in a sequence starting at $r_1$, $l \leq p + 1$.\medskip
+\\ Let $x = s_1...s_{j-1}$, $y=s_j...s_{l-1}$, and $z=s_l...s_n$. As $x$ takes $M$ from $r_1$ to $r_j$, $y$ takes $M$ from $r_j$ to $r_j$, and $z$ takes $M$ from $r_j$ to $r_{n+1}$, which is an accept state, $M$ must accept $xy^iz$ for $i \geq 0$. As $j \neq l$, $|y| > 0$. As $l \leq p + 1$, $|xy| \leq p$.\medskip
+\\ Thus, all conditions of the pumping lemma have been satisfied.
 
+\subsection{Showing a language is not regular}
+\begin{itemize}
+	\item Assume that a language $B$ is regular in order to obtain a contradiction
+	\item Use the pumping lemma to guarantee the existence of a pumping length $p$, such that all strings of length $p$ or greater in $B$ can be pumped
+	\item Find a string $s$ in $B$ that has length $p$ or greater but cannot be pumped
+	\item Show that $s$ cannot be pumped by considering all ways of dividing it into $x$, $y$, and $z$--taking condition 3 into account if convenient--and, for each such division, finding a value $i$ where $xy^iz \notin B$.
+	\\ This step often involves grouping the various ways of dividing $s$ itno several cases and individually analysing them.
+	\item The existence of $s$ contradicts the pumping lemma if $B$ were regular. Hence, $B$ cannot be regular.
+\end{itemize}
+Finding $s$ often needs creative thinking, and searching through several candidates before finding one that works. Typically, try members of $B$ that seem to exhibit the "essence" of $B$'s nonregularity.
 \end{document}
